@@ -6,3 +6,11 @@
 2.0
 
 Now powered by Pixi JS :  https://github.com/pixijs/pixi.js/
+
+### Usage
+
+```javascript
+if (isAwesome){
+  return true
+}
+```
