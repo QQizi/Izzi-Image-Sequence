@@ -12,7 +12,7 @@ Now powered by Pixi JS :  https://github.com/pixijs/pixi.js/
 ```javascript
 izziImageSequence({
     'element'       : "#canvas",
-    "imgPath"       : "data/images.json",
+    "imgPath"       : "data/sequence.json",
     "width"         : "500",
     "height"        : "500",
     "numbreImg"     : 50,
