@@ -7,10 +7,22 @@
 
 Now powered by Pixi JS :  https://github.com/pixijs/pixi.js/
 
-### Usage
+### Basic Usage Example
 
 ```javascript
-if (isAwesome){
-  return true
-}
+izziImageSequence({
+                    'element'       : "#canvas",
+                    "imgPath"       : "data/images.json",
+                    "width"         : "500",
+                    "height"        : "500",
+                    "numbreImg"     : 50,
+                    "indexActif"    : 0,
+                    "autoplay"      : true,
+                    "reverse"       : true,
+                    "repeat"        : true,
+                    "numbreRepeat"  : 1,
+                    "delayInterval" : 25,
+                    "delayIntervalReverse" : 25,
+                    "pauseReverse" : 1000
+                });
 ```
