@@ -20,7 +20,6 @@ izziImageSequence({
     "autoplay"      : true,
     "reverse"       : true,
     "repeat"        : true,
-    "numbreRepeat"  : 1,
     "delayInterval" : 25,
     "delayIntervalReverse" : 25,
     "pauseReverse" : 1000
