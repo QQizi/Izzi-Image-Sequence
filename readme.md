@@ -6,6 +6,7 @@
 2.1
 
 Now powered by Pixi JS :  https://github.com/pixijs/pixi.js/
+
 And Hammer JS : https://github.com/hammerjs/hammer.js
 
 ### What's new ?
