@@ -43,14 +43,14 @@ izziImageSequence({
  Returns the object with couple of useful functions and methods: 
  
  ```javascript
- * sequence.functionTriggerAnim() - run sequence
- * sequence.functionPauseAnim() - pause sequence
- * sequence.functionKillAnim() - stop sequence
- * sequence.functionChangeRepeat(Boolean) - set repeat true/false
- * sequence.functionChangeReverse(Boolean) - set reverse true/false
- * sequence.functionReverseDirection() - change current direction
- * sequence.functionSetDirection(0) - set current direction (0 = forward / 1 = backward)
- * sequence.functionIsFinish() - return true if current direction animation is finished
+ * sequence.play() - run sequence
+ * sequence.pause() - pause sequence
+ * sequence.stop() - stop sequence
+ * sequence.setRepeat(Boolean) - set repeat true/false
+ * sequence.setReverse(Boolean) - set reverse true/false
+ * sequence.reverseDirection() - change current direction
+ * sequence.setDirection(0) - set current direction (0 = forward / 1 = backward)
+ * sequence.isFinish() - return true if current direction animation is finished
  * sequence.setActifIndex() - set a new actif index
  * sequence.getParams() - get all params
  * sequence.getIndex() - get active index
