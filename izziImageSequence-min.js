@@ -125,6 +125,7 @@ window.izziImageSequence = function( options ) {
 		{id: "images", src:izziImageSequence.global.imgPath},
 	]);
 
+
 	function handleComplete() {
 		izziImageSequence.global.magikPack = new Magipack(queue.getResult('binary'), queue.getResult('images'));
 		izziImageSequence.global.jsonBase = queue.getResult('images');
@@ -136,22 +137,20 @@ window.izziImageSequence = function( options ) {
 		for(var i = 0; i < izziImageSequence.global.numbreImg; i++){
 
 			loadBlob(izziImageSequence.global.magikPack.getURI(izziImageSequence.global.jsonBase[i][0]), 'sequence_'+i)
-			.then(function(obj) {
-				loaderTexture.add(obj.id,obj.data);
-				imageCreated++
+				.then(function(obj) {
+					loaderTexture.add(obj.id,obj.data);
+					imageCreated++
 
-				if(imageCreated == izziImageSequence.global.numbreImg){
-					loaderTexture.load();
-				}
-			}).catch(function(error) {
+					if(imageCreated == izziImageSequence.global.numbreImg){
+						loaderTexture.load();
+					}
+				}).catch(function(error) {
 
 			});
 		}
 
 		loaderTexture.once('complete',function(ressource){
 			izziImageSequence.global.texturePackage = ressource.resources;
-
-			console.log(izziImageSequence.global.texturePackage);
 
 			izziImageSequence.global.canvasElem = new PIXI.Sprite(izziImageSequence.global.texturePackage['sequence_' + _indexActifLoad].texture);
 
@@ -167,7 +166,6 @@ window.izziImageSequence = function( options ) {
 				izziImageSequence.global._interval    = setInterval(triggerAnim, izziImageSequence.global.delayInterval);
 			}
 
-
 			options.initSequence(izziImageSequence.global.element);
 
 			animateSequence();
@@ -178,9 +176,12 @@ window.izziImageSequence = function( options ) {
 
 	function animateSequence(){
 		requestAnimationFrame(animateSequence);
-
-		izziImageSequence.global.renderer.render(izziImageSequence.global.stage);
+		if(izziImageSequence.global.renderer){
+			izziImageSequence.global.renderer.render(izziImageSequence.global.stage);
+		}
 	}
+
+	animateSequence();
 
 	function triggerAnim(){
 		izziImageSequence.global.isFinish = false;

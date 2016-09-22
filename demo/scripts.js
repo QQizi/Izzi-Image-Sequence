@@ -51,16 +51,7 @@ $(document).ready(function () {
 
 					}
 				});
-				/*var queue = new createjs.LoadQueue();
-				queue.on("complete", handleComplete, this);
-				queue.loadManifest([
-					{id: "image", src:"images.pack", type: 'binary'},
-					{id: "config", src:"images.json"},
-				]);
-				function handleComplete() {
-					var mp = new Magipack(queue.getResult('image'), queue.getResult('config'));
-					console.log(mp.getURI('000.jpg'));
-				}*/
+
 			}
 		},
 		binds : function(){
