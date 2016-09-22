@@ -105,4 +105,13 @@ bower_components/
 config.codekit/
 bower.json/
 izziImageSequence.js
-izziImageSequence.js
+.bowerrc
+package.json
+.codekit-cache
+gulpfile.js
+magicpack
+withmagicpacl.js
+backup.js
+min
+
+backup.js
