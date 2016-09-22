@@ -79,6 +79,37 @@ window.izziImageSequence = function( options ) {
 		}
 	};
 
+	function loadBlob(blob, id){
+		return new Promise( function(resolve, reject) {
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', blob, true);
+
+			xhr.responseType = 'arraybuffer';
+
+			xhr.onload = function(e) {
+				if (this.status == 200) {
+					var uInt8Array = new Uint8Array(this.response);
+					var i = uInt8Array.length;
+					var binaryString = new Array(i);
+					while (i--)
+					{
+						binaryString[i] = String.fromCharCode(uInt8Array[i]);
+					}
+					var data = binaryString.join('');
+
+					var base64 = window.btoa(data);
+
+					var obj = {
+						'data' : "data:image/png;base64,"+base64,
+						'id' : id
+					};
+					resolve(obj);
+				}
+			};
+
+			xhr.send();
+		});
+	}
 
 	var _indexActifLoad = izziImageSequence.global.indexActif;
 	var sens = 0;
@@ -100,15 +131,29 @@ window.izziImageSequence = function( options ) {
 		izziImageSequence.global.numbreImg = queue.getResult('images').length;
 
 		var loaderTexture = new PIXI.loaders.Loader();
+		var imageCreated = 0;
 
 		for(var i = 0; i < izziImageSequence.global.numbreImg; i++){
-			loaderTexture.add('sequence_'+i,izziImageSequence.global.magikPack.getURI(izziImageSequence.global.jsonBase[i][0]));
+
+			loadBlob(izziImageSequence.global.magikPack.getURI(izziImageSequence.global.jsonBase[i][0]), 'sequence_'+i)
+			.then(function(obj) {
+				loaderTexture.add(obj.id,obj.data);
+				imageCreated++
+
+				if(imageCreated == izziImageSequence.global.numbreImg){
+					loaderTexture.load();
+				}
+			}).catch(function(error) {
+
+			});
 		}
 
 		loaderTexture.once('complete',function(ressource){
 			izziImageSequence.global.texturePackage = ressource.resources;
 
-			izziImageSequence.global.canvasElem = new PIXI.Sprite(new PIXI.Texture(new PIXI.BaseTexture(izziImageSequence.global.magikPack.getURI(izziImageSequence.global.jsonBase[_indexActifLoad][0]))));
+			console.log(izziImageSequence.global.texturePackage);
+
+			izziImageSequence.global.canvasElem = new PIXI.Sprite(izziImageSequence.global.texturePackage['sequence_' + _indexActifLoad].texture);
 
 			izziImageSequence.global.canvasElem.position.x = 0;
 			izziImageSequence.global.canvasElem.position.y = 0;
@@ -237,18 +282,21 @@ window.izziImageSequence = function( options ) {
 		}
 
 
-		izziImageSequence.global.canvasElem.texture = new PIXI.Texture(new PIXI.BaseTexture(izziImageSequence.global.magikPack.getURI(izziImageSequence.global.jsonBase[_indexActifLoad][0])));
+		//izziImageSequence.global.canvasElem.texture = new PIXI.Texture(new PIXI.BaseTexture(izziImageSequence.global.magikPack.getURI(izziImageSequence.global.jsonBase[_indexActifLoad][0])));
+		izziImageSequence.global.canvasElem.texture = izziImageSequence.global.texturePackage['sequence_' + _indexActifLoad].texture;
 	}
 
 	function setActifIndex(index){
 		_indexActifLoad = index;
-		izziImageSequence.global.canvasElem.texture = new PIXI.Texture(new PIXI.BaseTexture(izziImageSequence.global.magikPack.getURI(izziImageSequence.global.jsonBase[_indexActifLoad][0])));
+		//izziImageSequence.global.canvasElem.texture = new PIXI.Texture(new PIXI.BaseTexture(izziImageSequence.global.magikPack.getURI(izziImageSequence.global.jsonBase[_indexActifLoad][0])));
+		izziImageSequence.global.canvasElem.texture = izziImageSequence.global.texturePackage['sequence_' + _indexActifLoad].texture;
 	}
 
 	return {
 		setActifIndex : function(index){
 			_indexActifLoad = index;
-			izziImageSequence.global.canvasElem.texture = new PIXI.Texture(new PIXI.BaseTexture(izziImageSequence.global.magikPack.getURI(izziImageSequence.global.jsonBase[_indexActifLoad][0])));
+			//izziImageSequence.global.canvasElem.texture = new PIXI.Texture(new PIXI.BaseTexture(izziImageSequence.global.magikPack.getURI(izziImageSequence.global.jsonBase[_indexActifLoad][0])));
+			izziImageSequence.global.canvasElem.texture = izziImageSequence.global.texturePackage['sequence_' + _indexActifLoad].texture;
 		},
 		getParams : function(){
 			return izziImageSequence.global;
