@@ -6,6 +6,8 @@
 3.0
 
 Now powered by : 
+
+
 Pixi JS :  https://github.com/pixijs/pixi.js/
 
 Hammer JS : https://github.com/hammerjs/hammer.js
