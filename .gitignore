@@ -103,6 +103,4 @@ crashlytics-build.properties
 
 bower_components/
 min
-demo/
-demo
 test
