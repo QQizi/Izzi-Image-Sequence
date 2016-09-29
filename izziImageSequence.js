@@ -56,29 +56,30 @@
 window.izziImageSequence = function( options ) {
 	var izziImageSequence = {
 		global : {
-			'imgPath'               : options.imgPath,
-			'packPath'              : options.packPath,
-			'element'               : document.querySelector(options.element),
-			'numbreRepeat'          : options.numbreRepeat,
-			'numberDoneDirection'   : 0,
-
-			'width'                 : options.width == undefined ?document.querySelector(options.element).offsetWidth : options.width,
-			'height'                 : options.height == undefined ?document.querySelector(options.element).offsetHeight : options.height,
-
-			'delayInterval'         : options.delayInterval == undefined ?50 : options.delayInterval,
-			'delayIntervalReverse'  : options.delayIntervalReverse == undefined ?50 : options.delayIntervalReverse,
-			'indexActif'            : options.indexActif == undefined ?0 : options.indexActif,
-			'repeat'                : options.repeat == undefined ? false : options.repeat,
-			'reverse'               : options.reverse == undefined ? false : options.reverse,
-			'pauseReverse'          : options.pauseReverse == undefined ? 0 : options.pauseReverse,
-			'autoplay'              : options.autoplay == undefined ? true : options.autoplay,
-			'enableTouchMoove'      : options.enableTouchMoove == undefined ? false : options.enableTouchMoove,
-			'_interval'             : null,
-
-			isFinish                : false
+			imgPath               : options.imgPath,
+			packPath              : options.packPath,
+			element               : document.querySelector(options.element),
+			numbreRepeat          : options.numbreRepeat,
+			numberDoneDirection   : 0,
+			width                 : options.width == undefined ?document.querySelector(options.element).offsetWidth : options.width,
+			height                 : options.height == undefined ?document.querySelector(options.element).offsetHeight : options.height,
+			delayInterval         : options.delayInterval == undefined ?50 : options.delayInterval,
+			delayIntervalReverse  : options.delayIntervalReverse == undefined ?50 : options.delayIntervalReverse,
+			indexActif            : options.indexActif == undefined ?0 : options.indexActif,
+			repeat                : options.repeat == undefined ? false : options.repeat,
+			reverse               : options.reverse == undefined ? false : options.reverse,
+			pauseReverse          : options.pauseReverse == undefined ? 0 : options.pauseReverse,
+			autoplay              : options.autoplay == undefined ? true : options.autoplay,
+			enableTouchMoove      : options.enableTouchMoove == undefined ? false : options.enableTouchMoove,
+			_interval             : null,
+			sens                  : 0,
+			isFinish              : false
 		}
 	};
 
+	/*
+	* BLOB TO BASE64 (usable by PixiJS)
+	* */
 	function loadBlob(blob, id){
 		return new Promise( function(resolve, reject) {
 			var xhr = new XMLHttpRequest();
@@ -112,12 +113,17 @@ window.izziImageSequence = function( options ) {
 	}
 
 	var _indexActifLoad = izziImageSequence.global.indexActif;
-	var sens = 0;
 
+	/*
+	* INIT PIXI CANVAS
+	* */
 	izziImageSequence.global.renderer = new PIXI.WebGLRenderer(izziImageSequence.global.width, izziImageSequence.global.height);
 	izziImageSequence.global.element.appendChild(izziImageSequence.global.renderer.view);
 	izziImageSequence.global.stage = new PIXI.Container();
 
+	/*
+	 * LOAD IMAGES JSON
+	 * */
 	var queue = new createjs.LoadQueue();
 	queue.on("complete", handleComplete, this);
 	queue.loadManifest([
@@ -125,17 +131,24 @@ window.izziImageSequence = function( options ) {
 		{id: "images", src:izziImageSequence.global.imgPath},
 	]);
 
-
+	/*
+	 * IMAGES JSON LOADED
+	 * */
 	function handleComplete() {
 		izziImageSequence.global.magikPack = new Magipack(queue.getResult('binary'), queue.getResult('images'));
 		izziImageSequence.global.jsonBase = queue.getResult('images');
 		izziImageSequence.global.numbreImg = queue.getResult('images').length;
 
+		/*
+		 * INIT PIXI LOADER FOR IMAGES
+		 * */
 		var loaderTexture = new PIXI.loaders.Loader();
 		var imageCreated = 0;
 
 		for(var i = 0; i < izziImageSequence.global.numbreImg; i++){
-
+			/*
+			 * CONVERT ALL IMAGES INTO BASE64
+			 * */
 			loadBlob(izziImageSequence.global.magikPack.getURI(izziImageSequence.global.jsonBase[i][0]), 'sequence_'+i)
 				.then(function(obj) {
 					loaderTexture.add(obj.id,obj.data);
@@ -149,25 +162,33 @@ window.izziImageSequence = function( options ) {
 			});
 		}
 
+		/*
+		 * LOADING IMAGES COMPLETE, ALL IMAGE HAVE BEEN CONVERT INTO PIXI TEXTURES
+		 * */
 		loaderTexture.once('complete',function(ressource){
+			//ARRAY OF TEXTURES
 			izziImageSequence.global.texturePackage = ressource.resources;
 
+			//CREATE SPRITE OBJECT WITH ACTIVE IMAGE
 			izziImageSequence.global.canvasElem = new PIXI.Sprite(izziImageSequence.global.texturePackage['sequence_' + _indexActifLoad].texture);
 
+			//SPRITE POSITION INTO CANVAS
 			izziImageSequence.global.canvasElem.position.x = 0;
 			izziImageSequence.global.canvasElem.position.y = 0;
 
+			//SPRITE SIZE
 			izziImageSequence.global.canvasElem.width = izziImageSequence.global.width;
 			izziImageSequence.global.canvasElem.height = izziImageSequence.global.height;
 
+			//ADD SPRITE INTO CANVAS
 			izziImageSequence.global.stage.addChild(izziImageSequence.global.canvasElem);
 
+			//IF AUTOPLAY IS TRUE, START INTERVAL
 			if(izziImageSequence.global.autoplay == true && izziImageSequence.global.enableTouchMoove == false){
 				izziImageSequence.global._interval    = setInterval(triggerAnim, izziImageSequence.global.delayInterval);
 			}
 
-			options.initSequence(izziImageSequence.global.element);
-
+			//INIT TOUCH MOOVE
 			if(izziImageSequence.global.enableTouchMoove == true){
 				var hammertime = new Hammer(izziImageSequence.global.element, {});
 				var panDirection = null;
@@ -216,12 +237,21 @@ window.izziImageSequence = function( options ) {
 				options.onCompleteLoader(izziImageSequence.global.element);
 			}
 
+			//TRIGGER CALLBACK INITI SEQUENCE
+			if(options.initSequence != undefined){
+				options.initSequence(izziImageSequence.global.element);
+			}
+
+			//START REQUEST ANIMATION FRAME
 			animateSequence();
 		});
 
 		loaderTexture.load();
 	}
 
+	/*
+	 * REQUESTANIMATIONFRAME FOR UPDATING CANVAS
+	 * */
 	function animateSequence(){
 		requestAnimationFrame(animateSequence);
 		if(izziImageSequence.global.renderer){
@@ -229,8 +259,7 @@ window.izziImageSequence = function( options ) {
 		}
 	}
 
-	animateSequence();
-
+	//FUNCTION TRIGGER AT EACH INTERVAL
 	function triggerAnim(){
 		izziImageSequence.global.isFinish = false;
 
@@ -239,7 +268,7 @@ window.izziImageSequence = function( options ) {
 		}
 
 		//GO
-		if(sens == 0){
+		if(izziImageSequence.global.sens == 0){
 			if(_indexActifLoad+1 < izziImageSequence.global.numbreImg){
 				_indexActifLoad++;
 			}else{
@@ -250,7 +279,7 @@ window.izziImageSequence = function( options ) {
 						izziImageSequence.global.isFinish = true;
 						options.onCompleteBoucle();
 					}
-					sens = 1;
+					izziImageSequence.global.sens = 1;
 
 					if(izziImageSequence.global.pauseReverse != 0){
 						clearInterval(izziImageSequence.global._interval);
@@ -280,7 +309,7 @@ window.izziImageSequence = function( options ) {
 						}, izziImageSequence.global.pauseReverse);
 					}
 
-					sens = 1;
+					izziImageSequence.global.sens = 1;
 				}else if(izziImageSequence.global.repeat == false && izziImageSequence.global.reverse == false){
 					clearInterval(izziImageSequence.global._interval);
 					if(options.onComplete != undefined){
@@ -315,7 +344,7 @@ window.izziImageSequence = function( options ) {
 						}
 					}
 
-					sens = 0;
+					izziImageSequence.global.sens = 0;
 				}else if(izziImageSequence.global.repeat == false && izziImageSequence.global.reverse == true){
 					clearInterval(izziImageSequence.global._interval);
 					if(options.onComplete != undefined){
@@ -330,22 +359,17 @@ window.izziImageSequence = function( options ) {
 			}
 		}
 
-
-		//izziImageSequence.global.canvasElem.texture = new PIXI.Texture(new PIXI.BaseTexture(izziImageSequence.global.magikPack.getURI(izziImageSequence.global.jsonBase[_indexActifLoad][0])));
 		izziImageSequence.global.canvasElem.texture = izziImageSequence.global.texturePackage['sequence_' + _indexActifLoad].texture;
 	}
 
 	function setActifIndex(index){
 		_indexActifLoad = index;
-		//izziImageSequence.global.canvasElem.texture = new PIXI.Texture(new PIXI.BaseTexture(izziImageSequence.global.magikPack.getURI(izziImageSequence.global.jsonBase[_indexActifLoad][0])));
 		izziImageSequence.global.canvasElem.texture = izziImageSequence.global.texturePackage['sequence_' + _indexActifLoad].texture;
 	}
 
 	return {
 		setActifIndex : function(index){
-			_indexActifLoad = index;
-			//izziImageSequence.global.canvasElem.texture = new PIXI.Texture(new PIXI.BaseTexture(izziImageSequence.global.magikPack.getURI(izziImageSequence.global.jsonBase[_indexActifLoad][0])));
-			izziImageSequence.global.canvasElem.texture = izziImageSequence.global.texturePackage['sequence_' + _indexActifLoad].texture;
+			setActifIndex(index);
 		},
 		getParams : function(){
 			return izziImageSequence.global;
@@ -356,7 +380,7 @@ window.izziImageSequence = function( options ) {
 		play: function() {
 			clearInterval(izziImageSequence.global._interval);
 
-			sens = 0;
+			izziImageSequence.global.sens = 0;
 			izziImageSequence.global.numberDoneDirection = 0
 
 			izziImageSequence.global._interval    = setInterval(triggerAnim, izziImageSequence.global.delayInterval);
@@ -372,7 +396,7 @@ window.izziImageSequence = function( options ) {
 				this.play();
 			}else{
 				izziImageSequence.global.repeat = false;
-				sens = 0;
+				izziImageSequence.global.sens = 0;
 				this.play();
 			}
 		},setReverse: function(e){
@@ -380,18 +404,18 @@ window.izziImageSequence = function( options ) {
 				izziImageSequence.global.reverse = true;
 			}else{
 				izziImageSequence.global.reverse = false;
-				sens = 0;
+				izziImageSequence.global.sens = 0;
 			}
 		},reverseDirection: function(e){
 			if(this.isFinish() == false){
-				if(sens == 0){
-					sens = 1;
+				if(izziImageSequence.global.sens == 0){
+					izziImageSequence.global.sens = 1;
 				}else{
-					sens = 0;
+					izziImageSequence.global.sens = 0;
 				}
 			}
 		},setDirection: function(e){
-			sens = e;
+			izziImageSequence.global.sens = e;
 		},isFinish: function(e){
 			return izziImageSequence.global.isFinish;
 		}
