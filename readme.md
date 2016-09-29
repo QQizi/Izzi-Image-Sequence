@@ -3,36 +3,51 @@
  Izzi Image Sequence is the easiest way to use image sequence and to control it.
 
 ### Version
-2.1
+3.0
 
-Now powered by Pixi JS :  https://github.com/pixijs/pixi.js/
+Now powered by : 
+Pixi JS :  https://github.com/pixijs/pixi.js/
 
-And Hammer JS : https://github.com/hammerjs/hammer.js
+Hammer JS : https://github.com/hammerjs/hammer.js
+
+MagiPack : https://github.com/keitakun/Magipack.js
 
 ### What's new ?
+
+`Version 3.0`
+
+Generation of the json files is now handled by MagiPack.
 
 `Version 2.1`
 
 Add parameter `enableTouchMoove` for touchscreen and mouse control over the sequence. This parameter disable autoplay event if set at true.
 
-### Basic json file used
+### Generating JSON & pack files
 
+Set permissions to Python script : 
 ```
-["link/to/image_01.extension","link/to/image_02.extension"]
+chmod 0755 packImages.py
 ```
+
+Run the script by passing the -p argument for the directory :
+```
+./packImages.py -p img_folder
+```
+
 
 ### Basic Usage Example
 
 ```javascript
 izziImageSequence({
     element       : "#canvas_container",
-    imgPath       : "data/sequence.json",
+    "imgPath"     : "images.json",
+    "packPath"    : "images.pack",
     width         : 500,
     height        : 500,
     numbreImg     : 50,
     indexActif    : 0,
     autoplay      : true,
-    reverse      : true,
+    reverse       : true,
     repeat        : true,
     delayInterval : 25,
     delayIntervalReverse : 25,
@@ -63,6 +78,7 @@ Izzi Image Sequence support the following list of parameters on initialization:
 
  ```javascript 
  * @param {String} imgPath - Path to json file
+ * @param {String} packPath - Path to pack file
  * @param {String} element - Canvas element container selector
  * @param {Int} numbreRepeat - How many time the sequence will repeat
  *
