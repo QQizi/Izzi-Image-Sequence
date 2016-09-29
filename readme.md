@@ -40,8 +40,8 @@ Run the script by passing the -p argument for the directory :
 ```javascript
 izziImageSequence({
     element       : "#canvas_container",
-    "imgPath"     : "images.json",
-    "packPath"    : "images.pack",
+    imgPath       : "images.json",
+    packPath      : "images.pack",
     width         : 500,
     height        : 500,
     numbreImg     : 50,
