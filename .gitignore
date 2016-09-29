@@ -102,22 +102,7 @@ crashlytics.properties
 crashlytics-build.properties
 
 bower_components/
-config.codekit
-bower.json
-izziImageSequence.js
-.bowerrc
-package.json
-.codekit-cache
-gulpfile.js
-withmagicpacl.js
-backup.js
 min
 demo/
 demo
-magipack/
-magipack
-
-backup.js
 test
-
-demo/scripts.js

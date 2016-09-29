@@ -1,0 +1,22 @@
+{
+  "name": "izziimagesequence",
+  "main": "izziimagesequence.js",
+  "homepage": "https://github.com/QQizi/izziimagesequence",
+  "authors": [
+    "QQizi <quentin.mangin@gmail.com>"
+  ],
+  "description": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "hammerjs": "^2.0.8",
+    "pixi.js": "^4.0.2",
+    "PreloadJS": "^0.6.2"
+  }
+}
