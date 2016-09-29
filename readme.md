@@ -7,7 +7,9 @@
 
 Now powered by : 
 Pixi JS :  https://github.com/pixijs/pixi.js/
+
 Hammer JS : https://github.com/hammerjs/hammer.js
+
 MagiPack : https://github.com/keitakun/Magipack.js
 
 ### What's new ?
@@ -22,24 +24,30 @@ Add parameter `enableTouchMoove` for touchscreen and mouse control over the sequ
 
 ### Generating JSON & pack files
 
+Set permissions to Python script : 
 ```
-Set permissions to Python script : chmod 0755 packImages.py
-Run the script by passing the -p argument for the directory : ./packImages.py -p img_folder
+chmod 0755 packImages.py
 ```
+
+Run the script by passing the -p argument for the directory :
+```
+./packImages.py -p img_folder
+```
+
 
 ### Basic Usage Example
 
 ```javascript
 izziImageSequence({
     element       : "#canvas_container",
-    "imgPath"       : "images.json",
-    "packPath"      : "images.pack",
+    "imgPath"     : "images.json",
+    "packPath"    : "images.pack",
     width         : 500,
     height        : 500,
     numbreImg     : 50,
     indexActif    : 0,
     autoplay      : true,
-    reverse      : true,
+    reverse       : true,
     repeat        : true,
     delayInterval : 25,
     delayIntervalReverse : 25,
