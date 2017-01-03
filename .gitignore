@@ -104,3 +104,4 @@ crashlytics-build.properties
 bower_components/
 min
 test
+config.codekit
